@@ -46,15 +46,7 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
           aws-region: ${{ inputs.aws_region }}
 
-      # - name: Initialize project
-      #   working-directory: ./infra/${{ inputs.provider }}/
-      #   run: terraform init -backend-config=env/${{ inputs.env }}/backend.hcl  -var-file=env/${{ inputs.env }}/${{ inputs.env }}.tfvars -reconfigure
-
-      # - name: Terraform Plan
-      #   working-directory: ./infra/${{ inputs.provider }}/
-      #   run: terraform plan -var-file=env/${{ inputs.env }}/${{ inputs.env }}.tfvars -out=tfplan
-
-      # - name: Apply Infra
-      #   working-directory: ./infra/${{ inputs.provider }}/
-      #   id: apply_infra
-      #   run: terraform apply -auto-approve tfplan
+      - name: 'terragrunt run-all'
+        working-directory: ${{ env.tg_working_dir }}
+        run: |
+          terragrunt run-all apply --terragrunt-non-interactive
