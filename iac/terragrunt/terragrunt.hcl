@@ -5,8 +5,8 @@ locals {
 }
 
 # Generate AWS providers
-generate "versions" {
-  path      = "versions_override.tf"
+generate "provider" {
+  path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
     terraform {
