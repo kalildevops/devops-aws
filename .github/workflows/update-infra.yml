@@ -5,8 +5,10 @@ on:
     inputs:
       env:
         required: true
+        type: string
       aws_region:
         required: true
+        type: string
     secrets:
       aws_account:
         required: true
