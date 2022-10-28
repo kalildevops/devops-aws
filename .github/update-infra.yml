@@ -1,0 +1,58 @@
+name: update-infra
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        required: true
+      aws_region:
+        required: true
+    secrets:
+      aws_account:
+        required: true
+
+env:
+  tf_version: '1.2.7'
+  tg_version: '0.38.9'
+  tg_working_dir: 'iac/terragrunt/aws-default-account/dev/useast1/'
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  apply-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.tf_version }}
+
+      - name: 'Setup Terragrunt'
+        uses: eLco/setup-terragrunt@v1
+        with:
+          terragrunt_version: ${{ env.tg_version }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
+          aws-region: ${{ inputs.aws_region }}
+
+      # - name: Initialize project
+      #   working-directory: ./infra/${{ inputs.provider }}/
+      #   run: terraform init -backend-config=env/${{ inputs.env }}/backend.hcl  -var-file=env/${{ inputs.env }}/${{ inputs.env }}.tfvars -reconfigure
+
+      # - name: Terraform Plan
+      #   working-directory: ./infra/${{ inputs.provider }}/
+      #   run: terraform plan -var-file=env/${{ inputs.env }}/${{ inputs.env }}.tfvars -out=tfplan
+
+      # - name: Apply Infra
+      #   working-directory: ./infra/${{ inputs.provider }}/
+      #   id: apply_infra
+      #   run: terraform apply -auto-approve tfplan
