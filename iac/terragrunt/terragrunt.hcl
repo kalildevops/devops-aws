@@ -30,6 +30,7 @@ remote_state {
     config = {
         bucket = "tfstate-devops-kalil"
         key = "aws/${path_relative_to_include()}/${local.env}-terraform.tfstate"
+        region = "${local.region}"
     }
     generate = {
         path      = "backend.tf"
