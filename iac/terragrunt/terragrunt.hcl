@@ -39,10 +39,7 @@ remote_state {
 }
 
 inputs = {
+  project = "aws-samples"
   env    = local.env,
   region = local.region
-
-  tags = {
-    env = local.env
-  }
 }

@@ -1,5 +1,5 @@
 terraform {
-  source = "${path_relative_from_include()}/../terraform/modules/s3//."
+  source = "${path_relative_from_include()}/../terraform/modules/sns//."
 }
 
 include {
