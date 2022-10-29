@@ -17,7 +17,6 @@ env:
   tf_version: '1.2.7'
   tg_version: '0.38.9'
   tg_working_dir: 'iac/terragrunt/aws-default-account/dev/us-east-1/'
-  node_version: '16'
 
 permissions:
       id-token: write
