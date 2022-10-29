@@ -8,7 +8,7 @@ on:
 jobs:
   aws-dev:
     name: Update AWS infra - DEV
-    if: github.event_name == 'push'
+    # if: github.event_name == 'push'
     uses: ./.github/workflows/update-infra.yml
     with:
       env: dev
