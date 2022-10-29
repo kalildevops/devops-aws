@@ -3,7 +3,7 @@ name: Update AWS infra
 on:
   workflow_dispatch:
   push:
-    branches: [master, aws-basic-structure]
+    branches: [master]
 
 jobs:
   aws-dev:
