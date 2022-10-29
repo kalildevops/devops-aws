@@ -17,6 +17,7 @@ env:
   tf_version: '1.2.7'
   tg_version: '0.38.9'
   tg_working_dir: 'iac/terragrunt/aws-default-account/dev/us-east-1/'
+  node_version: '16'
 
 permissions:
       id-token: write
@@ -39,12 +40,14 @@ jobs:
         uses: eLco/setup-terragrunt@v1
         with:
           terragrunt_version: ${{ env.tg_version }}
+          node-version: ${{ env.node_version }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
           aws-region: ${{ inputs.aws_region }}
+          node-version: ${{ env.node_version }}
 
       - name: 'terragrunt run-all'
         working-directory: ${{ env.tg_working_dir }}
