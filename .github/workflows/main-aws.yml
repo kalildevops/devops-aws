@@ -1,0 +1,17 @@
+name: Update AWS infra
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  aws-dev:
+    name: Update AWS infra - DEV
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/update-infra.yml
+    with:
+      env: dev
+      aws_region: us-east-1
+    secrets:
+      aws_account: ${{ secrets.AWS_ACCOUNT }}
