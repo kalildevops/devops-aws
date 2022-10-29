@@ -40,14 +40,12 @@ jobs:
         uses: eLco/setup-terragrunt@v1
         with:
           terragrunt_version: ${{ env.tg_version }}
-          node-version: ${{ env.node_version }}
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
           aws-region: ${{ inputs.aws_region }}
-          node-version: ${{ env.node_version }}
 
       - name: 'terragrunt run-all'
         working-directory: ${{ env.tg_working_dir }}
