@@ -56,19 +56,19 @@ jobs:
           aws-region: ${{ env.aws_region }}
 
       - name: 'terragrunt run-all'
-        if: ${{ inputs.resource-choice }} == "all resources" and ${{ inputs.terragrunt-choice }} == "create"
+        if: ${{ inputs.resource-choice }} == "all resources" && ${{ inputs.terragrunt-choice }} == "create"
         working-directory: ${{ env.tg_working_dir }}
         run: |
           terragrunt run-all apply --terragrunt-non-interactive
 
-      - name: 'terragrunt destroy-all'
-        if: ${{ inputs.resource-choice }} == "all resources" and ${{ inputs.terragrunt-choice }} == "destroy"
-        working-directory: ${{ env.tg_working_dir }}
-        run: |
-          terragrunt destroy-all
+      # - name: 'terragrunt destroy-all'
+      #   if: ${{ inputs.resource-choice }} == "all resources" and ${{ inputs.terragrunt-choice }} == "destroy"
+      #   working-directory: ${{ env.tg_working_dir }}
+      #   run: |
+      #     terragrunt destroy-all
 
-      - name: 'Create/Update ${{ inputs.resource-choice }} resources'
-        if: ${{ inputs.resource-choice }} != "all resources" and ${{ inputs.terragrunt-choice }} == "create"
-        working-directory: ${{ env.tg_working_dir }}
-        run: |
-          terragrunt apply -auto-approve --terragrunt-working-dir ${{ inputs.resource-choice }}
+      # - name: 'Create/Update ${{ inputs.resource-choice }} resources'
+      #   if: ${{ inputs.resource-choice }} != "all resources" and ${{ inputs.terragrunt-choice }} == "create"
+      #   working-directory: ${{ env.tg_working_dir }}
+      #   run: |
+      #     terragrunt apply -auto-approve --terragrunt-working-dir ${{ inputs.resource-choice }}
