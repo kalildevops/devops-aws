@@ -56,7 +56,7 @@ jobs:
           aws-region: ${{ env.aws_region }}
 
       - name: 'terragrunt run-all'
-        if: inputs.resource-choice == 'all resources' and inputs.terragrunt-choice == 'create'
+        if: ${{ github.event.inputs.resource-choice }} == 'all resources' and ${{ github.event.inputs.terragrunt-choice }} == 'create'
         working-directory: ${{ env.tg_working_dir }}
         run: |
           terragrunt run-all apply --terragrunt-non-interactive
