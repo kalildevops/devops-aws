@@ -50,7 +50,7 @@ jobs:
           aws-region: ${{ env.aws_region }}
   terragrunt-apply:
     runs-on: ubuntu-latest
-    if: $ {{ inputs.choice }} == 'all resources'
+    if: ${{ inputs.choice }} == 'all resources'
     steps:
       - name: 'terragrunt run-all'
         working-directory: ${{ env.tg_working_dir }}
