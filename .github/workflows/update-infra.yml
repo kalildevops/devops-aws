@@ -3,7 +3,13 @@ name: AWS Create/Update infra
 on:
   workflow_dispatch:
     inputs:
-      choice:
+      terragrunt-choice:
+        type: choice
+        description: Select if you want to create or destroy infrastructure
+        options:
+        - create
+        - destroy
+      resource-choice:
         type: choice
         description: Select AWS resource to create or update
         options:
@@ -48,11 +54,21 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
           aws-region: ${{ env.aws_region }}
-  terragrunt-apply:
-    runs-on: ubuntu-latest
-    if: ${{ inputs.choice }} == 'all resources'
-    steps:
+
       - name: 'terragrunt run-all'
+        if: ${{ inputs.resource-choice }} == 'all resources' and ${{ inputs.terragrunt-choice} } == 'create'
         working-directory: ${{ env.tg_working_dir }}
         run: |
           terragrunt run-all apply --terragrunt-non-interactive
+
+      - name: 'terragrunt destroy-all'
+        if: ${{ inputs.resource-choice }} == 'all resources' and ${{ inputs.terragrunt-choice} } == 'destroy'
+        working-directory: ${{ env.tg_working_dir }}
+        run: |
+          terragrunt destroy-all
+
+      - name: 'Create/Update ${{ inputs.resource-choice }} resources'
+        if: ${{ inputs.resource-choice }} != 'all resources' and ${{ inputs.terragrunt-choice} } == 'create'
+        working-directory: ${{ env.tg_working_dir }}
+        run: |
+          terragrunt apply -auto-approve --terragrunt-working-dir ${{ inputs.resource-choice }}
