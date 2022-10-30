@@ -1,14 +1,15 @@
-name: update-infra
+name: AWS Create/Update infra
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      env:
-        required: true
-        type: string
-      aws_region:
-        required: true
-        type: string
+      choice:
+        type: choice
+        description: Select AWS resource to create or update
+        options:
+        - s3
+        - sns
+        - all resources
     secrets:
       aws_account:
         required: true
@@ -17,13 +18,15 @@ env:
   tf_version: '1.2.7'
   tg_version: '0.38.9'
   tg_working_dir: 'iac/terragrunt/aws-default-account/dev/us-east-1/'
+  env: 'dev'
+  aws_region: 'us-east-1'
 
 permissions:
       id-token: write
       contents: read
 
 jobs:
-  apply-infra:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,8 +47,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
-          aws-region: ${{ inputs.aws_region }}
-
+          aws-region: ${{ env.aws_region }}
+  terragrunt-apply:
+    runs-on: ubuntu-latest
+    if: $ {{ inputs.choice }} == 'all resources'
+    steps:
       - name: 'terragrunt run-all'
         working-directory: ${{ env.tg_working_dir }}
         run: |
