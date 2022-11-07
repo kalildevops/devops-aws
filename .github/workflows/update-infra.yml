@@ -15,6 +15,7 @@ on:
         options:
         - s3
         - sns
+        - eks
         - all
     secrets:
       aws_account:
