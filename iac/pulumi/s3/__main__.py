@@ -1,5 +1,8 @@
 import pulumi
-from pulumi_aws import aws
+from pulumi_aws import s3
 
-# Create S3 Bucket
-s3 = aws.s3.Bucket('bucket-test-pulumi')
+# Create an AWS resource (S3 Bucket)
+bucket = s3.Bucket('bucket-test-pulumi')
+
+# Export the name of the bucket
+pulumi.export('bucket_name', bucket.id)
