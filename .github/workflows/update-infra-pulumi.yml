@@ -8,6 +8,7 @@ on:
         description: Select if you want to create or destroy infrastructure
         options:
         - create
+        - update
         - destroy
       resource-choice:
         type: choice
@@ -52,6 +53,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Pulumi init
+        if: inputs.pulumi-choice == 'create'
         working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
