@@ -1,0 +1,59 @@
+name: AWS Create/Update infra - Pulumi
+
+on:
+  workflow_dispatch:
+    inputs:
+      pulumi-choice:
+        type: choice
+        description: Select if you want to create or destroy infrastructure
+        options:
+        - create
+        - destroy
+      resource-choice:
+        type: choice
+        description: Select AWS resource
+        options:
+        - sns
+    secrets:
+      aws_account:
+        required: true
+
+env:
+  tg_working_dir: 'iac/terragrunt/aws-default-account/dev/us-east-1/'
+  env: 'dev'
+  aws_region: 'us-east-1'
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  update-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.9 
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
+          aws-region: ${{ env.aws_region }}
+
+      - name: Install Python requirements
+        working-directory: ${{ env.tg_working_dir }}
+        run: |
+          pip install -r requirements.txt
+
+      # - uses: pulumi/actions@v3
+      #   with:
+      #     command: up
+      #     stack-name: dev
+      #   env:
+      #     PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
