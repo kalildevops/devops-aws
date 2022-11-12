@@ -53,8 +53,10 @@ jobs:
 
       - name: Pulumi init
         working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          pulumi stack init "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+          pulumi stack init ${{ inputs.resource-choice }}-stack-${{ env.env }}
 
       - uses: pulumi/actions@v3
         with:
