@@ -54,5 +54,6 @@ jobs:
         with:
           command: up
           stack-name: "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+          work-dir: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
