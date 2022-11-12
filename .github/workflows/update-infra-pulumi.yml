@@ -51,6 +51,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Pulumi init
+        working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        run: |
+          pulumi stack init "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+
       - uses: pulumi/actions@v3
         with:
           command: up
