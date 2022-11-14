@@ -60,9 +60,21 @@ jobs:
         run: |
           pulumi stack init ${{ inputs.resource-choice }}-stack-${{ env.env }}
 
-      - uses: pulumi/actions@v3
+      - name: Pulumi up
+        if: inputs.pulumi-choice != 'destroy'
+        uses: pulumi/actions@v3
         with:
           command: up
+          stack-name: "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+          work-dir: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi destroy
+        if: inputs.pulumi-choice == 'destroy'
+        uses: pulumi/actions@v3
+        with:
+          command: destroy
           stack-name: "${{ inputs.resource-choice }}-stack-${{ env.env }}"
           work-dir: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
         env:
