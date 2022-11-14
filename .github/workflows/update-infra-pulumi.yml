@@ -86,4 +86,4 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          pulumi stack rm --force ${{ inputs.resource-choice }}-stack-${{ env.env }}
+          pulumi stack rm ${{ inputs.resource-choice }}-stack-${{ env.env }} --force -y
