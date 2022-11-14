@@ -1,8 +1,13 @@
 import pulumi
-from pulumi_aws import s3
+import pulumi_aws as aws
 
-# Create an AWS resource (S3 Bucket)
-bucket = s3.Bucket('bucket-test-pulumi')
+bucket_v2 = aws.s3.BucketV2("bucket-test-pulumi")
+public_access_block = aws.s3.BucketPublicAccessBlock("exampleBucketPublicAccessBlock",
+    bucket=bucket_v2.id,
+    block_public_acls=True,
+    block_public_policy=True,
+    ignore_public_acls=True,
+    restrict_public_buckets=True)
 
 # Export the name of the bucket
-pulumi.export('bucket_name', bucket.id)
+pulumi.export('bucket_name', bucket_v2.id)
