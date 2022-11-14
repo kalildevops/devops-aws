@@ -1,8 +1,8 @@
 import pulumi
 import pulumi_aws as aws
 
-bucket_v2 = aws.s3.BucketV2("bucket-test-pulumi")
-public_access_block = aws.s3.BucketPublicAccessBlock("exampleBucketPublicAccessBlock",
+bucket_v2 = aws.s3.BucketV2('bucket-test-pulumi', bucket='bucket-test-pulumi')
+public_access_block = aws.s3.BucketPublicAccessBlock("this",
     bucket=bucket_v2.id,
     block_public_acls=True,
     block_public_policy=True,

@@ -1,7 +1,5 @@
 import pulumi
-from pulumi_aws import aws
+import pulumi_aws as aws
 
 # Create SNS topic
-sns_topic = aws.sns.Topic('topic-test-pulumi', {
-    name='topic-test-pulumi'
-})
+sns_topic = aws.sns.Topic('topic-test-pulumi', name='topic-test-pulumi')
