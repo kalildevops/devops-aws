@@ -1,0 +1,89 @@
+name: AWS Create/Update infra - Pulumi
+
+on:
+  workflow_dispatch:
+    inputs:
+      pulumi-choice:
+        type: choice
+        description: Select if you want to create or destroy infrastructure
+        options:
+        - create
+        - update
+        - destroy
+      resource-choice:
+        type: choice
+        description: Select AWS resource
+        options:
+        - s3
+        - sns
+    secrets:
+      aws_account:
+        required: true
+
+env:
+  pulumi_working_dir: 'iac/pulumi'
+  env: 'dev'
+  aws_region: 'us-east-1'
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  update-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python 3.9 
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/github-actions-oidc-role
+          aws-region: ${{ env.aws_region }}
+
+      - name: Install Python requirements
+        working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        run: |
+          pip install -r requirements.txt
+
+      - name: Pulumi init
+        if: inputs.pulumi-choice == 'create'
+        working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: |
+          pulumi stack init ${{ inputs.resource-choice }}-stack-${{ env.env }}
+
+      - name: Pulumi up
+        if: inputs.pulumi-choice != 'destroy'
+        uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+          work-dir: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi destroy
+        if: inputs.pulumi-choice == 'destroy'
+        uses: pulumi/actions@v3
+        with:
+          command: destroy
+          stack-name: "${{ inputs.resource-choice }}-stack-${{ env.env }}"
+          work-dir: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi stack rm
+        if: inputs.pulumi-choice == 'destroy'
+        working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: |
+          pulumi stack rm ${{ inputs.resource-choice }}-stack-${{ env.env }} --force -y

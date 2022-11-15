@@ -1,0 +1,6 @@
+name: s3
+description: Create S3 Bucket
+runtime:
+    name: python
+    options:
+        virtualenv: venv
