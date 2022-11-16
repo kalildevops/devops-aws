@@ -1,4 +1,4 @@
-name: AWS Create/Update infra
+name: AWS Create/Update infra - Terragrunt/Terraform
 
 on:
   workflow_dispatch:
