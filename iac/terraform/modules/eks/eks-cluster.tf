@@ -8,7 +8,7 @@ module "eks" {
   version = "18.26.6"
 
   cluster_name    = "${var.project}-eks-cluster-${var.env}"
-  cluster_version = "1.23"
+  cluster_version = "1.24"
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
