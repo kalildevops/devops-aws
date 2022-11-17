@@ -1,4 +1,4 @@
-name: AWS Create/Update infra
+name: AWS Create/Update infra - Terragrunt/Terraform
 
 on:
   workflow_dispatch:
@@ -15,6 +15,7 @@ on:
         options:
         - s3
         - sns
+        - eks
         - all
     secrets:
       aws_account:
