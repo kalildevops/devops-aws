@@ -16,6 +16,7 @@ on:
         options:
         - s3
         - sns
+        - sns_aws_backend
     secrets:
       aws_account:
         required: true
