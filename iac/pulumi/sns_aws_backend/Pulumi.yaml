@@ -1,0 +1,8 @@
+name: sns
+description: Create SNS topic
+runtime:
+    name: python
+    options:
+        virtualenv: venv
+backend:
+    url: s3://pulumi-state-20250707
