@@ -53,6 +53,16 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Pulumi login to Pulumi Cloud
+        if: inputs.resource-choice != 'sns_aws_backend'
+        run: pulumi login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Pulumi login to S3 backend
+        if: inputs.resource-choice == 'sns_aws_backend'
+        run: pulumi login s3://pulumi-state-20250707
+
       - name: Pulumi init
         if: inputs.pulumi-choice == 'create'
         working-directory: "${{ env.pulumi_working_dir }}/${{ inputs.resource-choice }}"
